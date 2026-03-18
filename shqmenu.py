@@ -22,33 +22,35 @@ def yasal_uyari():
 
 def banner():
     os.system('clear')
-    # Kaçış dizisi hatası almamak için raw string (r"") kullanıyoruz
+    # ASCII Art ve Menü
     print(r" " + RED + r"""
-   ____  _   _   ___     _____ _____  _    __  __ 
+   ____  _   _   ___     _____ _____  _    __  __
   / ___|| | | | / _ \   |_   _| ____|/ \  |  \/  |
   \___ \| |_| || | | |    | | |  _| / _ \ | |\/| |
    ___) |  _  || |_| |    | | | |__/ ___ \| |  | |
   |____/|_| |_| \__\_\    |_| |____/_/   \_\_|  |_|
 """ + RESET + f"""
- {RED}--------------------------------------------------{RESET}
- {YELLOW}[ SHQ-Tool v1.5 - OSINT Edition ]{RESET}
+ {RED}------------------------------------------------->{RESET}
+ {YELLOW}[ SHQ-Tool v2.0 - OSINT Edition ]{RESET}
  {CYAN}Geliştirici: B. Ç. & Siameox | 2026{RESET}
- {RED}--------------------------------------------------{RESET}""")
-    
+ {RED}------------------------------------------------->{RESET}
+""")
+
     items = [
-        "Port Tarayıcı (Hızlı)", 
-        "IP / Domain İz Sürücü", 
-        "Yerel Ağ Bilgileri", 
-        "Web Header Analizi", 
-        "Phishing & URL Kontrol", 
-        "E-Posta İstihbaratı", 
+        "Port Tarayıcı (Hızlı)",
+        "IP / Domain İz Sürücü",
+        "Yerel Ağ Bilgileri",
+        "Web Header Analizi",
+        "Phishing & URL Kontrol",
+        "E-Posta İstihbaratı",
         "Nmap Derin Tarama",
-        "Kullanıcı Adı Tarayıcı (Sherlock)"
+        "Kullanıcı Adı Tarayıcı (SHQ OSINT)",
+        "Veri Sızıntısı Kontrolü (Data Breach)"
     ]
-    
+
     for i, item in enumerate(items, 1):
         print(f" {GREEN}[{i}]{RESET} {item}")
-    print(f" {RED}[0]{RESET} Çıkış\n{RED}--------------------------------------------------{RESET}")
+    print(f" {RED}[0]{RESET} Çıkış\n{RED}-------------->{RESET}")
 
 def main():
     yasal_uyari()
@@ -56,10 +58,12 @@ def main():
         banner()
         try:
             secim = input(f"{YELLOW} Seçiminiz >> {RESET}")
-            if secim == '0': 
+            
+            if secim == '0':
                 print(f"\n{RED}[!] SHQ TEAM Kapatılıyor...{RESET}")
                 sys.exit()
-            
+
+            # Hedef gerektiren seçenekler (3 ve 9 hariç)
             if secim in '1245678':
                 hedef = input(f"\n{CYAN}Hedef Girin: {RESET}")
                 if secim == '1': shqlib.port_taramasi(hedef)
@@ -69,15 +73,23 @@ def main():
                 elif secim == '6': shqlib.eposta_sorgu(hedef)
                 elif secim == '7': shqlib.derin_nmap(hedef)
                 elif secim == '8': shqlib.kullanici_tara(hedef)
+            
             elif secim == '3':
                 shqlib.yerel_ag()
+            
+            elif secim == '9':
+                target_mail = input(f"\n{CYAN}Sorgulanacak E-posta: {RESET}")
+                shqlib.sizi_kontrol(target_mail)
+            
             else:
                 print(f"\n{RED}[!] Hatalı Seçim!{RESET}")
                 time.sleep(1)
                 continue
-                
+
             input(f"\n{YELLOW}Menüye dönmek için Enter'a basın...{RESET}")
+        
         except KeyboardInterrupt:
+            print(f"\n\n{RED}[!] İşlem kullanıcı tarafından durduruldu.{RESET}")
             sys.exit()
 
 if __name__ == "__main__":
