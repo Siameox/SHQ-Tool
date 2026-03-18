@@ -1,106 +1,70 @@
 import os, time, sys, shqlib
 
 # Renkler
-RED    = '\033[1;31m'
-GREEN  = '\033[1;32m'
-YELLOW = '\033[1;33m'
-CYAN   = '\033[1;36m'
-MAGENTA = '\033[1;35m'
-RESET  = '\033[0m'
+G, C, R, Y, M, RS = '\033[92m', '\033[96m', '\033[91m', '\033[93m', '\033[95m', '\033[0m'
 
 def yasal_uyari():
-    os.system('clear')
-    print(f"""{RED}
-  [ ! ] YASAL UYARI [ ! ]
-  --------------------------------------------------
-  Bu araç sadece eğitim ve test amaçlıdır.
-  İzinsiz kullanımda tüm sorumluluk kullanıcıya aittir.
-  SHQ TEAM sorumluluk kabul etmez.
-  --------------------------------------------------
-  {RESET}""")
-    print(f"{YELLOW}SHQ İstihbarat Sistemleri Başlatılıyor...{RESET}")
-    time.sleep(2)
+    os.system("clear")
+    print(f"{R}──────────────────────────────────────────────────────────{RS}")
+    print(f"{R}[!] YASAL UYARI [!]{RS}")
+    print(f"{Y}Bu araç sadece eğitim ve savunma amaçlıdır.")
+    print(f"Kullanımdan doğacak her türlü sorumluluk kullanıcıya aittir.")
+    print(f"{C}Sahibi: B. Ç & SİAMEOX{RS}")
+    print(f"{R}──────────────────────────────────────────────────────────{RS}")
+    time.sleep(2) # O beklenen 2 saniyelik profesyonel duruş
 
 def banner():
-    os.system('clear')
-    print(r" " + RED + r"""
-   ____  _   _   ___     _____ _____  _    __  __
-  / ___|| | | | / _ \   |_   _| ____|/ \  |  \/  |
-  \___ \| |_| || | | |    | | |  _| / _ \ | |\/| |
-   ___) |  _  || |_| |    | | | |__/ ___ \| |  | |
-  |____/|_| |_| \__\_\    |_| |____/_/   \_\_|  |_|
-""" + RESET + f"""
- {RED}------------------------------------------------->
- {YELLOW}[ SHQ-Tool v2.5 - AI & OSINT Edition ]{RESET}
- {CYAN}Geliştirici: Berat & Siameox | 2026{RESET}
- {RED}------------------------------------------------->
-""")
-
-    items = [
-        "Port Tarayıcı (Hızlı)",
-        "IP / Domain İz Sürücü",
-        "Yerel Ağ Bilgileri",
-        "Web Header Analizi",
-        "Phishing & URL Kontrol",
-        "E-Posta İstihbaratı",
-        "Nmap Derin Tarama",
-        "Kullanıcı Adı Tarayıcı (SHQ OSINT)",
-        "Veri Sızıntısı Kontrolü (Data Breach)",
-        f"{MAGENTA}SHQ AI ASİSTANI (Yapay Zeka){RESET}"
-    ]
-
-    for i, item in enumerate(items, 1):
-        print(f" {GREEN}[{i}]{RESET} {item}")
-    print(f" {RED}[0]{RESET} Çıkış\n{RED}------------------------------------------------->{RESET}")
+    os.system("clear")
+    print(f"""{R}
+     ██████╗██╗  ██╗ ██████╗ 
+    ██╔════╝██║  ██║██╔═══██╗
+    ╚█████╗ ███████║██║   ██║
+     ╚═══██╗██╔══██║██║   ██║
+    ██████╔╝██║  ██║╚██████╔╝
+    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ 
+    {C}--- SHQ OSINT ISTİHBARAT TOOL ---{RS}
+    {Y}Geliştirici & Sahibi: {G}B. Ç & SİAMEOX{RS}
+    """)
 
 def main():
     yasal_uyari()
     while True:
         banner()
-        try:
-            secim = input(f"{YELLOW} Seçiminiz >> {RESET}")
-
-            if secim == '0':
-                print(f"\n{RED}[!] SHQ TEAM Kapatılıyor...{RESET}")
-                sys.exit()
-
-            # Hedef gerektiren seçenekler
-            if secim in '1245678':
-                hedef = input(f"\n{CYAN}Hedef Girin: {RESET}")
-                if secim == '1': shqlib.port_taramasi(hedef)
-                elif secim == '2': shqlib.ip_iz_sur(hedef)
-                elif secim == '4': shqlib.web_header(hedef)
-                elif secim == '5': shqlib.phish_kontrol(hedef)
-                elif secim == '6': shqlib.eposta_sorgu(hedef)
-                elif secim == '7': shqlib.derin_nmap(hedef)
-                elif secim == '8': shqlib.kullanici_tara(hedef)
-
-            elif secim == '3':
-                shqlib.yerel_ag()
-
-            elif secim == '9':
-                target_mail = input(f"\n{CYAN}Sorgulanacak E-Posta: {RESET}")
-                shqlib.sizi_kontrol(target_mail)
-
-            elif secim == '10':
-                print(f"\n{MAGENTA}--- SHQ AI ASİSTANI AKTİF ---{RESET}")
-                print(f"{YELLOW}(Çıkmak için 'exit' yazın){RESET}")
-                while True:
-                    soru = input(f"\n{CYAN}Sorunuz > {RESET}")
-                    if soru.lower() == 'exit':
-                        break
-                    shqlib.shq_ai_asistan(soru)
-
-            else:
-                print(f"\n{RED}[!] Hatalı Seçim!{RESET}")
-                time.sleep(1)
-                continue
-
-            input(f"\n{YELLOW}Menüye dönmek için Enter'a basın...{RESET}")
-
-        except KeyboardInterrupt:
-            print(f"\n\n{RED}[!] İşlem kullanıcı tarafından durduruldu.{RESET}")
-            sys.exit()
+        print(f"{G}[1]{RS} IP İz Sürme")
+        print(f"{G}[2]{RS} Yerel Ağ Bilgisi")
+        print(f"{G}[3]{RS} Web Header Analizi")
+        print(f"{G}[4]{RS} Phishing Kontrolü")
+        print(f"{G}[5]{RS} E-Posta İz Sürme (Holehe)")
+        print(f"{G}[6]{RS} Hızlı Port Taraması (Nmap)")
+        print(f"{G}[7]{RS} Sosyal Medya Tarayıcı")
+        print(f"{G}[8]{RS} Sizi Kontrolü (Email Sorgu)")
+        print(f"{G}[9]{RS} Veri Sızıntısı Sorgula (COMB)")
+        print(f"{R}[0]{RS} Çıkış\n")
+        
+        secim = input(f"{Y}Seçiminiz >> {RS}")
+        
+        if secim == "1":
+            h = input("Hedef IP: "); shqlib.ip_iz_sur(h)
+        elif secim == "2":
+            shqlib.yerel_ag()
+        elif secim == "3":
+            u = input("URL: "); shqlib.web_header(u)
+        elif secim == "4":
+            u = input("URL: "); shqlib.phish_kontrol(u)
+        elif secim == "5":
+            e = input("E-Posta: "); shqlib.eposta_sorgu(e)
+        elif secim == "6":
+            h = input("Hedef: "); shqlib.derin_nmap(h)
+        elif secim == "7":
+            u = input("Kullanıcı Adı: "); shqlib.kullanici_tara(u)
+        elif secim == "8":
+            e = input("E-Posta: "); shqlib.sizi_kontrol(e)
+        elif secim == "9":
+            e = input("E-Posta: "); shqlib.sizi_kontrol(e)
+        elif secim == "0":
+            print(f"{G}Güle Güle...{RS}"); sys.exit()
+        
+        input(f"\n{Y}Menüye dönmek için Enter'a basın...{RS}")
 
 if __name__ == "__main__":
     main()
