@@ -1,8 +1,11 @@
 import os
 import socket
 import requests
+import json
+import urllib.parse
+import time
 
-# Renk kodlarını (Eğer üstte tanımlı değilse hata vermemesi için buraya da ekledim)
+# Renk kodları
 GREEN = '\033[92m'
 CYAN = '\033[96m'
 RED = '\033[91m'
@@ -10,6 +13,38 @@ YELLOW = '\033[93m'
 MAGENTA = '\033[95m'
 RESET = '\033[0m'
 
+# --- SHQ AI ASİSTANI (GELİŞMİŞ HATA YÖNETİMİ V3.2) ---
+def shq_ai_asistan(soru):
+    print(f"\n{MAGENTA}[*] SHQ AI Veri Hattı Kuruluyor...{RESET}")
+    
+    encoded_soru = urllib.parse.quote(soru)
+    system_msg = urllib.parse.quote("Sen SHQ İstihbarat Timi siber güvenlik asistanısın. Türkçe ve teknik cevap ver.")
+    base_url = "https://text.pollinations.ai/"
+    final_url = f"{base_url}{encoded_soru}?system={system_msg}"
+
+    try:
+        # İlk deneme
+        response = requests.get(final_url, timeout=30)
+        
+        # Eğer hız sınırına takılırsak (Hata 429)
+        if response.status_code == 429:
+            print(f"{YELLOW}[!] Çok fazla istek gönderildi. 5 saniye bekleniyor...{RESET}")
+            time.sleep(5)
+            # İkinci deneme
+            response = requests.get(final_url, timeout=30)
+
+        if response.status_code == 200:
+            cevap = response.text.strip()
+            print(f"\n{GREEN}[+] SHQ AI Yanıtı:{RESET}\n{CYAN}{cevap}{RESET}")
+        else:
+            print(f"{RED}[!] Sunucu Hatası: {response.status_code}. Lütfen 30 saniye sonra tekrar dene.{RESET}")
+            
+    except requests.exceptions.Timeout:
+        print(f"{RED}[!] HATA: Zaman aşımı. İnternet hızın düşük olabilir.{RESET}")
+    except Exception as e:
+        print(f"{RED}[!] Beklenmedik Hata: {e}{RESET}")
+
+# --- OSINT & TEKNİK ARAÇLAR ---
 def ip_iz_sur(hedef):
     print(f"\n{CYAN}[*] IP Lokasyon İstihbaratı...{RESET}")
     os.system(f"curl -s 'http://ip-api.com/json/{hedef}'")
@@ -21,71 +56,52 @@ def yerel_ag():
         s.connect(("8.8.8.8", 80))
         print(f"{CYAN}IP: {s.getsockname()[0]}{RESET}")
         s.close()
-    except: 
+    except:
         print(f"{RED}[!] Bağlantı yok.{RESET}")
 
 def web_header(url):
-    os.system(f"curl -I -L -s {url} | grep -E 'Server|Content-Type|X-Frame-Options'")
+    print(f"\n{CYAN}[*] Header Analizi Yapılıyor...{RESET}")
+    os.system(f"curl -I -L -s {url} | grep -E 'Server|Content-Type|X-Powered-By'")
 
 def phish_kontrol(url):
-    os.system(f"curl -s https://openphish.com/feed.txt | grep '{url}'")
+    print(f"\n{YELLOW}[*] Phishing Kontrolü...{RESET}")
+    os.system(f"curl -s https://openphish.com/feed.txt | grep {url}")
 
 def eposta_sorgu(email):
+    print(f"\n{MAGENTA}[*] Holehe Sorgusu Başlatıldı...{RESET}")
     os.system(f"holehe {email}")
 
 def derin_nmap(hedef):
+    print(f"\n{RED}[*] Nmap Taraması Başlatıldı...{RESET}")
     os.system(f"nmap -A -T4 -Pn {hedef}")
 
-# --- YENİ VE HATASIZ OSINT MOTORU ---
 def kullanici_tara(username):
-    print(f"\n{MAGENTA}[*] SHQ OSINT Engine Başlatıldı:{RESET}")
-    print(f"{YELLOW}[*] Popüler platformlar taranıyor...{RESET}")
-
+    print(f"\n{MAGENTA}[*] SHQ OSINT Engine Başlatıldı...{RESET}")
     social_media = {
         "Instagram": f"https://www.instagram.com/{username}",
-        "Twitter/X": f"https://www.twitter.com/{username}",
         "GitHub": f"https://www.github.com/{username}",
-        "Reddit": f"https://www.reddit.com/user/{username}",
-        "Pinterest": f"https://www.pinterest.com/{username}",
-        "Steam": f"https://steamcommunity.com/id/{username}",
-        "TikTok": f"https://www.tiktok.com/@{username}",
         "Telegram": f"https://t.me/{username}",
-        "YouTube": f"https://www.youtube.com/@{username}",
-        "Twitch": f"https://www.twitch.tv/{username}"
+        "YouTube": f"https://www.youtube.com/@{username}"
     }
-
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-
+    headers = {"User-Agent": "Mozilla/5.0"}
     for platform, url in social_media.items():
         try:
-            response = requests.get(url, headers=headers, timeout=5)
-            if response.status_code == 200:
+            res = requests.get(url, headers=headers, timeout=5)
+            if res.status_code == 200:
                 print(f"{GREEN}[+] {platform}: {url}{RESET}")
-        except:
-            print(f"{RED}[!] {platform}: Bağlantı hatası.{RESET}")
+        except: pass
 
-    print(f"\n{CYAN}[*] Tarama tamamlandı.{RESET}")
-
-# --- V2.0: VERİ SIZINTISI KONTROLÜ (NEW) ---
 def sizi_kontrol(email):
-    print(f"\n{MAGENTA}[*] Veri Sızıntısı Sorgulanıyor: {YELLOW}{email}{RESET}")
-    # Ücretsiz ve güncel bir API üzerinden sorgulama yapar
+    print(f"\n{MAGENTA}[*] Veri Sızıntısı Sorgulanıyor: {email}{RESET}")
     url = f"https://api.proxynova.com/comb?query={email}"
-    
     try:
         response = requests.get(url, timeout=10)
         data = response.json()
-        
         if data.get("results"):
-            print(f"{RED}[!] TEHLİKE: Bu e-posta {len(data['results'])} sızıntıda bulundu!{RESET}")
-            print(f"{YELLOW}[-] Sızan Veri Kaynakları:{RESET}")
-            # Çok fazla sonuç varsa ilk 10 tanesini gösterelim ki ekran dolmasın
-            for result in data['results'][:10]:
+            print(f"{RED}[!] TEHLİKE: Sızıntı bulundu!{RESET}")
+            for result in data['results'][:5]:
                 print(f"  > {result}")
-            if len(data['results']) > 10:
-                print(f"{CYAN}... ve daha fazlası.{RESET}")
         else:
-            print(f"{GREEN}[+] TEMİZ: Bilinen büyük bir sızıntı kaydı bulunamadı.{RESET}")
-            
-    except Exception as e:
-        print(f"{RED}[!] Sorgulama hatası: {e}{RESET}")
+            print(f"{GREEN}[+] TEMİZ: Bilinen bir sızıntı yok.{RESET}")
+    except:
+        print(f"{RED}[!] Sorgulama hatası.{RESET}")

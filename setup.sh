@@ -7,30 +7,39 @@ YELLOW='\033[1;33m'
 RED='\033[1;31m'
 RESET='\033[0m'
 
-echo -e "${CYAN}[*] SHQ-Tool V2.0 Kurulumu Başlatılıyor...${RESET}"
+clear
+echo -e "${CYAN}------------------------------------------"
+echo -e "${CYAN}[*] SHQ-Tool V2.7 (AI Edition) Kurulumu"
+echo -e "${CYAN}------------------------------------------${RESET}"
 sleep 1
 
 # Paket Güncelleme
-echo -e "${YELLOW}[1] Paket listesi güncelleniyor...${RESET}"
+echo -e "${YELLOW}[1] Sistem paketleri güncelleniyor...${RESET}"
 pkg update -y && pkg upgrade -y
 
 # Temel Bağımlılıklar
-echo -e "${YELLOW}[2] Gerekli araçlar yükleniyor (Python, Curl, Nmap)...${RESET}"
-pkg install python -y
-pkg install curl -y
-pkg install nmap -y
+echo -e "${YELLOW}[2] Sistem araçları yükleniyor...${RESET}"
+pkg install python curl nmap -y
 
-# Python Kütüphaneleri (KRİTİK NOKTA)
-echo -e "${YELLOW}[3] Python kütüphaneleri yükleniyor (Requests, Holehe)...${RESET}"
-pip install requests
-pip install holehe
+# DNS Ayarı (Bağlantı ve Timeout hatalarını önlemek için kritik)
+echo -e "${YELLOW}[3] Ağ optimizasyonu yapılıyor...${RESET}"
+echo "nameserver 8.8.8.8" > /data/data/com.termux/files/usr/etc/resolv.conf
+
+# Python Kütüphaneleri
+echo -e "${YELLOW}[4] Python modülleri kuruluyor...${RESET}"
+pip install --upgrade pip
+pip install requests urllib3 holehe
 
 # Çalıştırma İzinleri
-echo -e "${YELLOW}[4] İzinler ayarlanıyor...${RESET}"
+echo -e "${YELLOW}[5] Dosya izinleri düzenleniyor...${RESET}"
 chmod +x shqmenu.py
 chmod +x shqlib.py
+chmod +x setup.sh
 
-echo -e "${GREEN}--------------------------------------------------${RESET}"
-echo -e "${GREEN}[+] Kurulum Başarıyla Tamamlandı!${RESET}"
-echo -e "${CYAN}[*] Çalıştırmak için: python3 shqmenu.py${RESET}"
-echo -e "${GREEN}--------------------------------------------------${RESET}"
+clear
+echo -e "${GREEN}------------------------------------------"
+echo -e "${GREEN}[+] KURULUM BAŞARIYLA TAMAMLANDI!"
+echo -e "${GREEN}------------------------------------------"
+echo -e "${CYAN}[*] SHQ AI ve OSINT Modülleri Hazır."
+echo -e "${YELLOW}[!] Başlatmak için: ${RESET}python3 shqmenu.py"
+echo -e "${GREEN}------------------------------------------${RESET}"
