@@ -73,7 +73,7 @@ def main():
             elif secim in ["9", "09"]:
                 e = input(f"{C}E-Posta: {RS}"); shqlib.sizi_kontrol(e)
             elif secim in ["0", "00"]:
-                print(f"{G}Güle Güle...{RS}"); sys.exit()
+                print(f"{G}Sistem Kapatılıyor... Güle Güle!{RS}"); sys.exit()
             else:
                 print(f"{R}[!] Geçersiz Seçim!{RS}")
             
